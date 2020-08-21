@@ -4,8 +4,6 @@
     #include<stdio.h>
     #include<string.h>
 
-    int symbol_table_length = 0;
-    int constant_table_length = 0;
     int line = 1;
     char bstack[100];
     int btop = 0;
@@ -30,7 +28,6 @@
     }
 
     void insert_into_symbol_table(char *lexeme, char *token_name){
-
         int l1 = strlen(lexeme);
         int l2 = strlen(token_name);
         int v = Hash(lexeme);
@@ -61,7 +58,6 @@
     }
 
     void insert_into_constant_table(char *lexeme, char *token_name){
-
         int l1 = strlen(lexeme);
         int l2 = strlen(token_name);
         int v = Hash(lexeme);
@@ -171,8 +167,8 @@
         printf("TYPE OF TOKEN \t\t TOKEN\n");
         printf("============= \t\t =====\n");
         int i;
-        for(i=0; i<symbol_table_length; i++) {
-            printf("%s \t\t %s\n", ST[i].name, ST[i].type);
+        for(i=0; i<1000; i++) {
+            if(ST[i].len!=0) printf("%s \t\t %s\n", ST[i].name, ST[i].type);
         }
     }
     // The above function prints the contents of our symbol table line by line.
@@ -183,8 +179,8 @@
         printf("TYPE OF CONSTANT \t\t VALUE OF CONSTANT\n");
         printf("================ \t\t =================\n");
         int i;
-        for(i=0; i<constant_table_length; i++) {
-            printf("%s \t\t %s\n", CT[i].name, CT[i].type);
+        for(i=0; i<1000; i++) {
+            if(CT[i].len!=0) printf("%s \t\t %s\n", CT[i].name, CT[i].type);
         }
     }
     // The above function prints the contents of our symbol table line by line.
@@ -294,7 +290,7 @@ PPD #(include[ ]*<.*>|(define.*|ifdef|endif|if|else))
                 printf("%d\t\tPRE-PROCESSOR\t\t%s\n", line, yytext);
             }
 "main"      {
-                printf("%d\t\tIDENTIFIER\t\t\t%s\n", line, yytext);
+                printf("%d\t\tIDENTIFIER\t\t%s\n", line, yytext);
                 insert_into_symbol_table(yytext, "IDENTIFIER");
             }
 
