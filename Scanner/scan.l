@@ -257,10 +257,6 @@ PPD #(include[ ]*<.*>|(define.*|ifdef|endif|if|else))
                 insert_into_symbol_table(yytext, "IDENTIFIER");
             }
 
-\/\*([^*]|\*+[^*/])*(\*\/)$   {
-                                printf("\n\nLINE - %d\t\tERROR UNMATCHED COMMENT\n\n",line);
-    return 0;
-}   
 
 (.?)        {
                 printf("============================================================================================================================================================");
@@ -297,7 +293,7 @@ int main(){
         printf("============================================================================================================================================================\n\n");
         printf("LINE NUMBER\tTYPE OF TOKEN\t\tVALUE\n");      
         printf("===========\t=============\t\t=====\n\n");
-        yyin = fopen("TestCase2.c", "r");
+        yyin = fopen("TestCase1.c", "r");
         int err = yylex();
         if (btop != 0) {
                     printf("%d\t\t\n\nUNMATCHED BRACKET--> ERROR\n\n");
