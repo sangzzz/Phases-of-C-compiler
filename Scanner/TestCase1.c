@@ -1,7 +1,6 @@
-// asas
+// Test Case 1
 /*
-
-adsafasa
+Test Case 1
             */
 #include <stdio.h>
 int main()
@@ -10,11 +9,15 @@ int main()
     printf("Enter a positive integer: ");
     scanf("%d", &n);
 
-    for (i = 's'; i <= n; ++i)
+    for (i = 1; i <= n; ++i)
     {
         sum += i;
     }
     printf("Sum = %d", sum);
     return 0;
 }
-/* *****hjkdkj******bnm */
+/* Program End */
+
+// Tests whether all the basic things are working properly
+// Single-line comments, Multi-line Comments, keywords, identifiers,
+//  constants and seperators recognition has been implemented.

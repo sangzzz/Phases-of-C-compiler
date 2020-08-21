@@ -7,6 +7,7 @@
     int line = 1;
     char bstack[100];
     int btop = 0;
+    int err = 1;
 
     struct hashtable{
         char name[100];
@@ -86,89 +87,14 @@
         CT[pos].len = strlen(lexeme);
 
     }
-
-    // struct symbolTable {
-    //     char token[100];
-    //     char type_of_token[100];
-    // }ST[100];
-    // // The above definition is a structure to implement the symbol table.
-    // // Each instance of the above structure will have two values, the token and the type of token it is.
-    // // i.e, whether it's a KEYWORD or an IDENTIFIER.
-    //
-    // struct constantTable {
-    //     char value[100];
-    //     char type_of_value[100];
-    // }CT[100];
-    // // The above definition defines a structure to implement our constant table.
-    // // Each instance of the structure will have two values, the constant and its type.
-    // // i.e, whether it is a NUMBER CONSTANT, CHARACTER CONSTANT, STRING CONSTANT
-    //
-    // int look_in_symbol_table(char* val){
-    //     int i;
-    //     for(i=0; i<symbol_table_length; i++) {
-    //         if (strcmp(ST[i].token, val) == 0) {
-    //             return 0;
-    //         }
-    //     }
-    //     return 1;
-    // }
-    // // The above function scans the symbol table for a previous occurrence of the constant and
-    // // returns 0 if it already exists and 1 if it doesn't.
-    //
-    // void insert_into_symbol_table(char* val, char* type_of_val){
-    //     if (symbol_table_length == 100) {
-    //         printf("Symbol Table Capacity Exceeded!!\n");
-    //     } else {
-    //         if (look_in_symbol_table(val) == 0) {
-    //             return;
-    //         } else {
-    //             strcpy(ST[symbol_table_length].token, val);
-    //             strcpy(ST[symbol_table_length].type_of_token, type_of_val);
-    //             symbol_table_length++;
-    //         }
-    //     }
-    // }
-    // // The above function accepts two parameters, the token and the type of token it is.
-    // // It then checks if the token already exists in the symbol table.
-    // // If it does, then nothing is done, if it is not, then the token is appended to the end of our table.
-    //
-    // int look_in_constant_table(char* val) {
-    //     int i;
-    //     for(i=0; i<constant_table_length; i++) {
-    //         if (strcmp(CT[i].value, val) == 0) {
-    //             return 0;
-    //         }
-    //     }
-    //     return 1;
-    // }
-    // // The above function scans the constant table for a previous occurrence of the constant and
-    // // returns 0 if it already exists and 1 if it doesn't.
-    //
-    // void insert_into_constant_table(char* val, char* type_of_val){
-    //     if (constant_table_length == 100) {
-    //         printf("Constant Table Capacity Exceeded!!\n");
-    //     } else {
-    //         if (look_in_constant_table(val) == 0) {
-    //             return;
-    //         } else {
-    //             strcpy(CT[constant_table_length].value, val);
-    //             strcpy(CT[constant_table_length].type_of_value, type_of_val);
-    //             constant_table_length++;
-    //         }
-    //     }
-    // }
-    // // The above function accepts two parameters, the token and the type of token it is.
-    // // It then checks if the token already exists in the symbol table.
-    // // If it does, then nothing is done, if it is not, then the token is appended to the end of our table.
-
-    void print_symbol_table() {
+   void print_symbol_table() {
         printf("============================================================================================================================================================\n");
         printf("+++ SYMBOL TABLE +++\n\n");
         printf("TYPE OF TOKEN \t\t TOKEN\n");
         printf("============= \t\t =====\n");
         int i;
         for(i=0; i<1000; i++) {
-            if(ST[i].len!=0) printf("%s \t\t %s\n", ST[i].name, ST[i].type);
+            if(ST[i].len!=0) printf("%s \t\t %s\n", ST[i].type, ST[i].name);
         }
     }
     // The above function prints the contents of our symbol table line by line.
@@ -180,7 +106,7 @@
         printf("================ \t\t =================\n");
         int i;
         for(i=0; i<1000; i++) {
-            if(CT[i].len!=0) printf("%s \t\t %s\n", CT[i].name, CT[i].type);
+            if(CT[i].len!=0) printf("%s \t\t %s\n", CT[i].type, CT[i].name);
         }
     }
     // The above function prints the contents of our symbol table line by line.
@@ -273,7 +199,7 @@ PPD #(include[ ]*<.*>|(define.*|ifdef|endif|if|else))
             }
 [\]]       {
                 printf("%d\t\tSQUARE BRACKET CLOSE\t%s\n", line, yytext);
-                if (bstack[--btop] != ']') {
+                if (bstack[--btop] != '[') {
                     printf("%d\t\t\n\nUNMATCHED SQUARE BRACKET OPEN --> ERROR\n\n", line);
                     return 0;
                 }}
@@ -354,6 +280,7 @@ PPD #(include[ ]*<.*>|(define.*|ifdef|endif|if|else))
                 {
                     printf("\n\nLINE - %d\t\tERROR ### UNDEFINED!!!\n\n",line);
                 }
+                err = 0;
                 return 0;
             }
 
@@ -371,8 +298,8 @@ int main(){
         printf("============================================================================================================================================================\n\n");
         printf("LINE NUMBER\tTYPE OF TOKEN\t\tVALUE\n");
         printf("===========\t=============\t\t=====\n\n");
-        yyin = fopen("TestCase1.c", "r");
-        int err = yylex();
+        yyin = fopen("TestCase5.c", "r");
+        yylex();
         if (btop != 0) {
                     printf("\t\t\n\nUNMATCHED BRACKET--> ERROR\n\n");
 
