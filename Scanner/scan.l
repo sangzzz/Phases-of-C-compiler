@@ -131,7 +131,7 @@ SLC \/\/(.*)
 /* MULTI LINE COMMENT */
 /* A multi-line comment will start with '/''*' and end with '*''/' */ 
 /* It won't have * and / before it ends --> Assumption. */
-MLC \/\*.*(\n)*.*\*\/
+MLC "/*"([^*]|\*+[^*/])*\*+"/"
 
 
 /* INTEGER CONSTANT */
@@ -209,12 +209,11 @@ PPD #(include[ ]*<.*>|(define.*|ifdef|endif|if|else))
                 printf("%d\t\tFORWARD SLASH\t%s\n", line, yytext);
             }
 {PPD}       {
-                line = 1;
                 printf("%d\t\tPRE-PROCESSOR\t\t%s\n", line, yytext);
             }
 "main"      {
-                printf("%d\t\tKEYWORD\t\t\t%s\n", line, yytext);
-                insert_into_symbol_table(yytext, "KEYWORD");
+                printf("%d\t\tIDENTIFIER\t\t\t%s\n", line, yytext);
+                insert_into_symbol_table(yytext, "IDENTIFIER");
             }
 
 {SLC}       {
@@ -222,13 +221,13 @@ PPD #(include[ ]*<.*>|(define.*|ifdef|endif|if|else))
             }
 
 {MLC}       {
+                printf("%d\t\tMULTI LINE COMMENT\t%s\n", line, yytext);
                 int i;
                 for(i = 0; i<sizeof(yytext); i++) {
                     if (yytext[i] == '\n') {
                         line++;
                     }
                 }
-                printf("%d\t\tMULTI LINE COMMENT\t%s\n", line, yytext);
             }
 {KEY}       {
                 printf("%d\t\tKEYWORD\t\t\t%s\n", line, yytext);
@@ -258,7 +257,10 @@ PPD #(include[ ]*<.*>|(define.*|ifdef|endif|if|else))
                 insert_into_symbol_table(yytext, "IDENTIFIER");
             }
 
-
+\/\*([^*]|\*+[^*/])*(\*\/)$   {
+                                printf("\n\nLINE - %d\t\tERROR UNMATCHED COMMENT\n\n",line);
+    return 0;
+}   
 
 (.?)        {
                 printf("============================================================================================================================================================");
@@ -266,7 +268,7 @@ PPD #(include[ ]*<.*>|(define.*|ifdef|endif|if|else))
                 {
                     printf("\n\nLINE - %d\t\tERROR IN PREPROCESSOR DIRECTIVE\n\n",line);
                 }
-                else if(yytext[0]=='/')
+                else if(yytext[0]=='/' && yytext[1]=='*')
                 {
                     printf("\n\nLINE - %d\t\tERROR UNMATCHED COMMENT\n\n",line);
                 }
@@ -278,7 +280,6 @@ PPD #(include[ ]*<.*>|(define.*|ifdef|endif|if|else))
                 {
                     printf("\n\nLINE - %d\t\tERROR ### UNDEFINED!!!\n\n",line);
                 }
-                // printf("%s\n", line, yytext);
                 return 0;
             }
 
@@ -296,8 +297,12 @@ int main(){
         printf("============================================================================================================================================================\n\n");
         printf("LINE NUMBER\tTYPE OF TOKEN\t\tVALUE\n");      
         printf("===========\t=============\t\t=====\n\n");
-        yyin = fopen("TestCase1.c", "r");
+        yyin = fopen("TestCase2.c", "r");
         int err = yylex();
+        if (btop != 0) {
+                    printf("%d\t\t\n\nUNMATCHED BRACKET--> ERROR\n\n");
+            
+        }
         if (err == 0){
             print_symbol_table();
             print_constant_table();
