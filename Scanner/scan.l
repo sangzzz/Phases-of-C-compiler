@@ -7,7 +7,6 @@
     int line = 1;
     char bstack[100];
     int btop = 0;
-    int err = 1;
 
     struct hashtable{
         char name[100];
@@ -280,7 +279,6 @@ PPD #(include[ ]*<.*>|(define.*|ifdef|endif|if|else))
                 {
                     printf("\n\nLINE - %d\t\tERROR ### UNDEFINED!!!\n\n",line);
                 }
-                err = 0;
                 return 0;
             }
 
@@ -290,25 +288,25 @@ PPD #(include[ ]*<.*>|(define.*|ifdef|endif|if|else))
 
 /* Driver Function */
 
-int main(){
+int main(int argc, char *argv[]){
+    if(argc!=2){
+    	printf("Invalid filename\n");
+    }
+    else printf("Opening %s \n", argv[1]);
     int i;
     int l = 1;
     char* s;
-    for(i = 1; i<=l; i++) {
-        printf("============================================================================================================================================================\n\n");
-        printf("LINE NUMBER\tTYPE OF TOKEN\t\tVALUE\n");
-        printf("===========\t=============\t\t=====\n\n");
-        yyin = fopen("TestCase5.c", "r");
-        yylex();
-        if (btop != 0) {
-                    printf("\t\t\n\nUNMATCHED BRACKET--> ERROR\n\n");
+    printf("============================================================================================================================================================\n\n");
+    printf("LINE NUMBER\tTYPE OF TOKEN\t\tVALUE\n");
+    printf("===========\t=============\t\t=====\n\n");
+    yyin = fopen(argv[1], "r");
+    yylex();
+    if (btop != 0) {
+                printf("\t\t\n\nUNMATCHED BRACKET--> ERROR\n\n");
 
-        }
-        if (err == 0){
-            print_symbol_table();
-            print_constant_table();
-        }
     }
+    print_symbol_table();
+    print_constant_table();
 }
 
 int yywrap(){
