@@ -160,7 +160,7 @@ PPD #(include[ ]*<.*>|(define.*|ifdef|endif|if|else))
 
 
 %%
-[\n]       {
+[\n\r]       {
                 line++;
             }
 [ \t]+        {;}
@@ -277,7 +277,7 @@ PPD #(include[ ]*<.*>|(define.*|ifdef|endif|if|else))
                 }
                 else
                 {
-                    printf("\n\nLINE - %d\t\tERROR ### UNDEFINED!!!\n\n",line);
+                    printf("\n\nLINE - %d\t\tERROR ### UNDEFINED!!!\nh%dh\n\n",line, yytext[yyleng-1]);
                 }
                 return 0;
             }
