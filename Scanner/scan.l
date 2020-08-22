@@ -160,7 +160,7 @@ PPD #(include[ ]*<.*>|(define.*|ifdef|endif|if|else))
 
 
 %%
-[\n\r]       {
+(\r|\n|\r\n)       {
                 line++;
             }
 [ \t]+        {;}
@@ -226,7 +226,7 @@ PPD #(include[ ]*<.*>|(define.*|ifdef|endif|if|else))
 {MLC}       {
                 printf("%d\t\tMULTI LINE COMMENT\t%s\n", line, yytext);
                 int i;
-                for(i = 0; i<sizeof(yytext); i++) {
+                for(i = 0; i<yyleng; i++) {
                     if (yytext[i] == '\n') {
                         line++;
                     }
